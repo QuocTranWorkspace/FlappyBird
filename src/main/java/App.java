@@ -1,6 +1,7 @@
 package main.java;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import main.java.service.SceneManager;
@@ -21,6 +22,7 @@ public class App extends JFrame {
             @SuppressWarnings("unused")
             SceneManager sceneManager = new SceneManager(frame);
         } catch (IOException ex) {
+            Logger.getLogger(ex.getMessage());
         }
     }
 

@@ -5,18 +5,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import main.java.model.Pipe;
@@ -28,12 +27,13 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     // JFrame size
     public static final int FRAME_WIDTH = 360;
     public static final int FRAME_HEIGHT = 640;
-    private JFrame frame;
 
     // Physics 2D
-    int velocityX = -3;
+    int velocityX = 3;
     int velocityY = 0;
     static final int GRAVITY = 1;
+    int playerDeathX;
+    Random rand = new Random();
 
     // Component's asset
     transient Image playerImg;
@@ -50,13 +50,14 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     // Game timer
     Timer gameLoop;
     boolean isLose = false;
+    boolean isFirst = true;
 
     // Score
     double score = 0;
     private JButton restartBtn = new JButton("Restart");
     private JButton menuBtn = new JButton("Menu");
 
-    public FlappyBird(JFrame frame) throws IOException {
+    public FlappyBird() throws IOException {
         setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
         // setFocusable: make sure falppybird class is mainly take on the key events
@@ -74,12 +75,12 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
         pipeManager = new PipeManager(higherPipe, lowerpipe);
 
-        gameLoop = new Timer(1000 / 60, this);
+        gameLoop = new Timer(1000 / 90, this);
         gameLoop.start();
 
         setUpLosePanel();
 
-        this.frame = frame;
+        playerDeathX = 0;
     }
 
     private void setUpLosePanel() {
@@ -125,24 +126,18 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         for (Pipe p : pipes) {
             g.drawImage(p.getPipeImage(), p.getPosition2D().getX(), p.getPosition2D().getY(), p.getPipeWidth(),
                     p.getPipeHeight(), null);
-            if (collision2D(player, p)) {
-                isLose = true;
-            }
         }
 
         // Draw the score
         g.setColor(Color.BLACK);
         g.setFont(new Font("Rockwell", Font.PLAIN, 16));
         if (isLose) {
-            restartBtn.setVisible(true);
-            menuBtn.setVisible(true);
             g.drawString("", 10, 35);
         } else {
             g.drawString("Score: " + (int) score, 10, 35);
         }
 
         if (player.getPosition2D().getY() > FRAME_HEIGHT) {
-            player.getPosition2D().setY(FRAME_HEIGHT - 2 * player.getPlayerHeight());
             isLose = true;
         }
     }
@@ -167,52 +162,73 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         int y = playerPosition.getY();
 
         // Set the position with physics applied velocity
+        x += playerDeathX;
         y += velocityY;
-        y = Math.max(y, 0);
+        if (isFirst) {
+            y = Math.max(y, 0);
+        }
         Position2D newPos = new Position2D(x, y);
         player.setPosition2D(newPos);
 
         // Move pipes
         // Get pipe current position
-        List<Pipe> pipes = pipeManager.getPipes();
-        for (Pipe p : pipes) {
-            Position2D pipePsition = p.getPosition2D();
-            int pipeX = pipePsition.getX();
-            int pipeY = pipePsition.getY();
+        if (!isLose) {
+            List<Pipe> pipes = pipeManager.getPipes();
+            for (Pipe p : pipes) {
+                if (collision2D(player, p)) {
+                    isLose = true;
+                }
+                Position2D pipePsition = p.getPosition2D();
+                int pipeX = pipePsition.getX();
+                int pipeY = pipePsition.getY();
 
-            // Add score at the first time pass the pipes (upper and lower pipe)
-            if (!p.getIsPassed()
-                    && playerPosition.getX() - player.getPlayerWidth() > p.getPosition2D().getX() + p.getPipeWidth()) {
-                score += 0.5;
-                p.setIsPassed(!p.getIsPassed());
+                // Add score at the first time pass the pipes (upper and lower pipe)
+                if (!p.getIsPassed()
+                        && playerPosition.getX() - player.getPlayerWidth() > p.getPosition2D().getX()
+                                + p.getPipeWidth()) {
+                    score += 0.5;
+                    p.setIsPassed(!p.getIsPassed());
+                }
+
+                // if (pipeX + p.getPipeWidth() < -360) {
+                // pipes.remove(p);
+                // return;
+                // }
+
+                pipeX -= velocityX;
+                Position2D newPipePos = new Position2D(pipeX, pipeY);
+                p.setPosition2D(newPipePos);
             }
-
-            if (pipeX + p.getPipeWidth() < 0) {
-                pipes.remove(p);
-                return;
-            }
-
-            pipeX += velocityX;
-            Position2D newPipePos = new Position2D(pipeX, pipeY);
-            p.setPosition2D(newPipePos);
         }
     }
 
-    public void deathBgAnimation() {
-        Point currLocation;
-        int iDisplaceXBy = 5;
-        int iDisplaceYBy = -10;
-        currLocation = this.getLocationOnScreen();
+    public void deathAnimation() {
+        playerDeathX = rand.nextInt(-5, 5);
+        velocityY = -20;
 
-        Point position1 = new Point(currLocation.x + iDisplaceXBy, currLocation.y
-                + iDisplaceYBy);
-        Point position2 = new Point(currLocation.x - iDisplaceXBy, currLocation.y
-                - iDisplaceYBy);
-        for (int i = 0; i < 1200; i++) {
-            this.setLocation(position1);
-            this.setLocation(position2);
-        }
-        this.setLocation(currLocation);
+        // Need to be noted
+        Timer timer = new Timer(1200, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Position2D playerPosition = player.getPosition2D();
+                int y = playerPosition.getY();
+
+                if (y > FRAME_HEIGHT) {
+                    restartBtn.setVisible(true);
+                    menuBtn.setVisible(true);
+                    // Release all the memory
+                    gameLoop.stop();
+                    gameLoop.removeActionListener(this);
+                    gameLoop = null;
+
+                    pipeManager.getPipeGenerateLoop().stop();
+                    pipeManager.getPipeGenerateLoop().removeActionListener(pipeManager);
+                    pipeManager.setPipeGenerateLoop(null);
+                }
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 
     @Override
@@ -221,24 +237,10 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         move();
         repaint();
 
-        if (isLose) {
-            for (int i = 0; i < 30; i++) {
-                velocityY = -i;
-            }
-            Timer timer = new Timer(200, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("im ded");
-                    // Release all the memory
-                    gameLoop.stop();
-                    gameLoop.removeActionListener(this);
+        if (isLose && isFirst) {
+            isFirst = !isFirst;
 
-                    pipeManager.getPipeGenerateLoop().stop();
-                    pipeManager.getPipeGenerateLoop().removeActionListener(pipeManager);
-                }
-            });
-            timer.setRepeats(false);
-            timer.start();
+            deathAnimation();
         }
     }
 
@@ -251,7 +253,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (!isLose && e.getKeyCode() == KeyEvent.VK_SPACE) {
             velocityY = -12;
         }
     }
