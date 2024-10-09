@@ -28,6 +28,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     public static final int FRAME_WIDTH = 360;
     public static final int FRAME_HEIGHT = 640;
 
+    private int sceneIndex = 1;
+
     // Physics 2D
     int velocityX = 3;
     int velocityY = 0;
@@ -89,14 +91,20 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
         // Set the buttons to be Center both directions
         restartBtn.setPreferredSize(new Dimension(80, 30));
-        menuBtn.setMaximumSize(new Dimension(80, 30));
+        restartBtn.setMaximumSize(new Dimension(80, 30));
         restartBtn.setAlignmentX(CENTER_ALIGNMENT);
         restartBtn.setVisible(false);
 
+        restartBtn.addActionListener((ActionEvent e) -> {
+        });
+
         menuBtn.setPreferredSize(new Dimension(80, 30));
-        restartBtn.setMaximumSize(new Dimension(80, 30));
+        menuBtn.setMaximumSize(new Dimension(80, 30));
         menuBtn.setAlignmentX(CENTER_ALIGNMENT);
         menuBtn.setVisible(false);
+
+        menuBtn.addActionListener((ActionEvent e) -> {
+        });
 
         // Space-between display
         this.add(Box.createVerticalGlue());
@@ -170,6 +178,19 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         Position2D newPos = new Position2D(x, y);
         player.setPosition2D(newPos);
 
+        if (y > FRAME_HEIGHT + 500) {
+            restartBtn.setVisible(true);
+            menuBtn.setVisible(true);
+            // Release all the memory
+            gameLoop.stop();
+            gameLoop.removeActionListener(this);
+            gameLoop = null;
+
+            pipeManager.getPipeGenerateLoop().stop();
+            pipeManager.getPipeGenerateLoop().removeActionListener(pipeManager);
+            pipeManager.setPipeGenerateLoop(null);
+        }
+
         // Move pipes
         // Get pipe current position
         if (!isLose) {
@@ -184,16 +205,11 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
                 // Add score at the first time pass the pipes (upper and lower pipe)
                 if (!p.getIsPassed()
-                        && playerPosition.getX() - player.getPlayerWidth() > p.getPosition2D().getX()
+                        && playerPosition.getX() > p.getPosition2D().getX()
                                 + p.getPipeWidth()) {
                     score += 0.5;
                     p.setIsPassed(!p.getIsPassed());
                 }
-
-                // if (pipeX + p.getPipeWidth() < -360) {
-                // pipes.remove(p);
-                // return;
-                // }
 
                 pipeX -= velocityX;
                 Position2D newPipePos = new Position2D(pipeX, pipeY);
@@ -203,32 +219,13 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     }
 
     public void deathAnimation() {
-        playerDeathX = rand.nextInt(-5, 5);
+        playerDeathX = rand.nextInt(-5, 10);
         velocityY = -20;
 
-        // Need to be noted
-        Timer timer = new Timer(1200, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Position2D playerPosition = player.getPosition2D();
-                int y = playerPosition.getY();
-
-                if (y > FRAME_HEIGHT) {
-                    restartBtn.setVisible(true);
-                    menuBtn.setVisible(true);
-                    // Release all the memory
-                    gameLoop.stop();
-                    gameLoop.removeActionListener(this);
-                    gameLoop = null;
-
-                    pipeManager.getPipeGenerateLoop().stop();
-                    pipeManager.getPipeGenerateLoop().removeActionListener(pipeManager);
-                    pipeManager.setPipeGenerateLoop(null);
-                }
-            }
-        });
-        timer.setRepeats(false);
-        timer.start();
+        // Change image
+        playerImg = new ImageIcon(getClass().getResource("../../resources/img/flappybird - backflip.png"))
+                .getImage();
+        player.setAsset(playerImg);
     }
 
     @Override
@@ -279,6 +276,14 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     public void setMenuBtn(JButton menuBtn) {
         this.menuBtn = menuBtn;
+    }
+
+    public int getSceneIndex() {
+        return sceneIndex;
+    }
+
+    public void setSceneIndex(int sceneIndex) {
+        this.sceneIndex = sceneIndex;
     }
 
 }

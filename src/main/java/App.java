@@ -1,12 +1,12 @@
 package main.java;
 
-import java.io.IOException;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import main.java.service.SceneManager;
 
 public class App extends JFrame {
+
+    public static SceneManager sceneManager;
 
     public void prepareGUI() {
         int frameWidth = 360;
@@ -18,16 +18,12 @@ public class App extends JFrame {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        try {
-            @SuppressWarnings("unused")
-            SceneManager sceneManager = new SceneManager(frame);
-        } catch (IOException ex) {
-            Logger.getLogger(ex.getMessage());
-        }
+        sceneManager = new SceneManager(frame);
     }
 
     public static void main(String[] args) {
         App app = new App();
         app.prepareGUI();
     }
+
 }
