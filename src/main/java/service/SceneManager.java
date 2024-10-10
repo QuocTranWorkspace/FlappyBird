@@ -51,33 +51,35 @@ public class SceneManager {
             // init stage
             StartMenu startMenu = new StartMenu();
             currentScene = startMenu;
-            startMenu.requestFocus();
+            // Request focus for curent sccene: required class ... setFocusable()
+            // Must request focus before add
             frame.add(startMenu);
+            startMenu.requestFocus();
+            frame.pack();
+
         } catch (IOException ex) {
             Logger.getLogger(ex.getMessage());
         }
 
-        frame.pack();
-        // Request focus for flappybird class: required class flappybird setFocusable()
         frame.setVisible(true);
-
     }
 
     public void loadScene(int index) {
         frame.remove(currentScene);
+        Component comp;
         try {
-            Component comp;
-            try {
-                comp = (Component) classes[index].getDeclaredConstructor().newInstance();
-                frame.add(comp);
-                comp.requestFocus();
+            comp = (Component) classes[index].getDeclaredConstructor().newInstance();
+            frame.add(comp);
+            comp.requestFocus();
 
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e) {
-                Logger.getLogger(e.getMessage());
-            }
-        } catch (NoSuchMethodException | SecurityException ex) {
-            Logger.getLogger(ex.getMessage());
+            // Need to be pack after add to frame to display and apply the preferred size
+            frame.pack();
+
+            // Set current scence
+            currentScene = comp;
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException | SecurityException | NoSuchMethodException e) {
+            Logger.getLogger(e.getMessage());
         }
     }
 

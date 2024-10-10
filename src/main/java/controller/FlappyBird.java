@@ -18,6 +18,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import main.java.App;
 import main.java.model.Pipe;
 import main.java.model.Player;
 import main.java.model.Position2D;
@@ -65,9 +66,6 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         // setFocusable: make sure falppybird class is mainly take on the key events
         setFocusable(true);
 
-        // addKeyListener()
-        addKeyListener(this);
-
         playerImg = new ImageIcon(getClass().getResource("../../resources/img/flappybird.png")).getImage();
         backgroundImage = new ImageIcon(getClass().getResource("../../resources/img/flappybirdbg.png")).getImage();
         higherPipe = new ImageIcon(getClass().getResource("../../resources/img/toppipe.png")).getImage();
@@ -86,6 +84,9 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     }
 
     private void setUpLosePanel() {
+        // addKeyListener()
+        addKeyListener(this);
+
         // Set the layout display horizontally
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -95,16 +96,14 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         restartBtn.setAlignmentX(CENTER_ALIGNMENT);
         restartBtn.setVisible(false);
 
-        restartBtn.addActionListener((ActionEvent e) -> {
-        });
+        restartBtn.addActionListener(actionEvent -> App.sceneManager.loadScene(1));
 
         menuBtn.setPreferredSize(new Dimension(80, 30));
         menuBtn.setMaximumSize(new Dimension(80, 30));
         menuBtn.setAlignmentX(CENTER_ALIGNMENT);
         menuBtn.setVisible(false);
 
-        menuBtn.addActionListener((ActionEvent e) -> {
-        });
+        menuBtn.addActionListener(actionEvent -> App.sceneManager.loadScene(0));
 
         // Space-between display
         this.add(Box.createVerticalGlue());
