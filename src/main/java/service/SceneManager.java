@@ -16,6 +16,8 @@ public class SceneManager {
     List<Component> sceneList = new ArrayList<>();
     private JFrame frame;
 
+    static int a = 0;
+
     Component currentScene;
 
     public SceneManager(JFrame frame) {
@@ -37,6 +39,7 @@ public class SceneManager {
         }
 
         for (Class<?> clazz : classes) {
+            a++;
             Component comp;
             try {
                 comp = (Component) clazz.getDeclaredConstructor().newInstance();
@@ -136,5 +139,13 @@ public class SceneManager {
             quickSort(arr, low, pi - 1);
             quickSort(arr, pi + 1, high);
         }
+    }
+
+    public static int getSceneNum() {
+        return a;
+    }
+
+    public void closeApp() {
+        this.frame.dispose();
     }
 }

@@ -1,14 +1,14 @@
 package main.java.model;
 
 import java.awt.Image;
-import main.java.controller.FlappyBird;
+import main.java.App;
 
 public class Player {
     private static final int WIDTH = 41;
     private static final int HEIGHT = 29;
 
-    private static final int INIT_X = FlappyBird.FRAME_WIDTH / 8;
-    private static final int INIT_Y = FlappyBird.FRAME_HEIGHT / 2;
+    private static final int INIT_X = App.FRAME_WIDTH / 8;
+    private static final int INIT_Y = App.FRAME_HEIGHT / 2;
 
     private Image asset;
     private Position2D position2D;

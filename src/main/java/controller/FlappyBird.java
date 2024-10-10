@@ -26,8 +26,8 @@ import main.java.service.PipeManager;
 
 public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     // JFrame size
-    public static final int FRAME_WIDTH = 360;
-    public static final int FRAME_HEIGHT = 640;
+    static final int FRAME_WIDTH = App.FRAME_WIDTH;
+    static final int FRAME_HEIGHT = App.FRAME_HEIGHT;
 
     private int sceneIndex = 1;
 

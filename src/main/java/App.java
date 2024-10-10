@@ -5,6 +5,8 @@ import javax.swing.WindowConstants;
 import main.java.service.SceneManager;
 
 public class App extends JFrame {
+    public static final int FRAME_WIDTH = 360;
+    public static final int FRAME_HEIGHT = 640;
 
     public static SceneManager sceneManager;
 

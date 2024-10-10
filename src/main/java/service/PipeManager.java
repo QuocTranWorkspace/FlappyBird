@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.swing.Timer;
-import main.java.controller.FlappyBird;
+import main.java.App;
 import main.java.model.Pipe;
 import main.java.model.Position2D;
 
@@ -18,7 +18,10 @@ public class PipeManager implements ActionListener {
     private Image higherPipeImage;
     private Image lowerPipeImage;
 
-    public static final int SCORE_SPACE = FlappyBird.FRAME_HEIGHT / 4;
+    // JFrame size
+    static final int FRAME_WIDTH = App.FRAME_WIDTH;
+    static final int FRAME_HEIGHT = App.FRAME_HEIGHT;
+    public static final int SCORE_SPACE = App.FRAME_HEIGHT / 4;
     private static final Random random = new Random();
 
     public PipeManager(Image higherPipeImage, Image lowerPipeImage) {
@@ -31,16 +34,16 @@ public class PipeManager implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int rand = random.nextInt(FlappyBird.FRAME_HEIGHT / 2);
+        int rand = random.nextInt(FRAME_HEIGHT / 2);
 
         Pipe upperPipe = new Pipe(higherPipeImage);
         Pipe lowerPipe = new Pipe(lowerPipeImage);
 
-        int posYUpper = -upperPipe.getPipeHeight() + FlappyBird.FRAME_HEIGHT / 8 + rand;
-        int posYLower = FlappyBird.FRAME_HEIGHT / 8 + rand + SCORE_SPACE;
+        int posYUpper = -upperPipe.getPipeHeight() + FRAME_HEIGHT / 8 + rand;
+        int posYLower = FRAME_HEIGHT / 8 + rand + SCORE_SPACE;
 
-        upperPipe.setPosition2D(new Position2D(FlappyBird.FRAME_WIDTH, posYUpper));
-        lowerPipe.setPosition2D(new Position2D(FlappyBird.FRAME_WIDTH, posYLower));
+        upperPipe.setPosition2D(new Position2D(FRAME_WIDTH, posYUpper));
+        lowerPipe.setPosition2D(new Position2D(FRAME_WIDTH, posYLower));
 
         pipes.add(upperPipe);
         pipes.add(lowerPipe);

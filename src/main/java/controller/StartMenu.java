@@ -17,8 +17,8 @@ import main.java.App;
 public class StartMenu extends JPanel {
 
     // JFrame size
-    static final int FRAME_WIDTH = 360;
-    static final int FRAME_HEIGHT = 640;
+    static final int FRAME_WIDTH = App.FRAME_WIDTH;
+    static final int FRAME_HEIGHT = App.FRAME_HEIGHT;
 
     private int sceneIndex = 0;
     private int redirectIndex = 1;
@@ -44,6 +44,7 @@ public class StartMenu extends JPanel {
         setUpStartPanel();
     }
 
+    @SuppressWarnings("static-access")
     private void setUpStartPanel() {
         // Set the layout display horizontally
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -56,15 +57,18 @@ public class StartMenu extends JPanel {
             btn.setVisible(true);
 
             int currentRedirectIndex = redirectIndex;
-
-            btn.addActionListener(actionEvent ->
-            /*
-             * @Problem: the redirectIndex is shared across all button listeners,
-             * so every button will use the final value of redirectIndex
-             * 
-             * @Solution: Declared the value at the time action is added
-             */
-            App.sceneManager.loadScene(currentRedirectIndex));
+            if (currentRedirectIndex < App.sceneManager.getSceneNum()) {
+                btn.addActionListener(actionEvent ->
+                /*
+                 * @Problem: the redirectIndex is shared across all button listeners,
+                 * so every button will use the final value of redirectIndex
+                 * 
+                 * @Solution: Declared the value at the time action is added
+                 */
+                App.sceneManager.loadScene(currentRedirectIndex));
+            } else {
+                btn.addActionListener(actionEvent -> App.sceneManager.closeApp());
+            }
 
             this.add(btn);
             this.add(Box.createVerticalStrut(10));
