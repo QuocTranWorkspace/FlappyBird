@@ -24,8 +24,7 @@ public class SceneManager {
         this.frame = frame;
 
         try {
-            classes = AccessingAllClassesInPackage.getClasses("main.java.controller");
-            Logger.getLogger(classes[0].toString());
+            classes = AccessingAllClassesInPackage.getFilteredClasses("main.java.controller", "BaseScene");
         } catch (ClassNotFoundException | IOException ex) {
             Logger.getLogger(ex.getMessage());
         }
@@ -60,7 +59,14 @@ public class SceneManager {
             startMenu.requestFocus();
             frame.pack();
 
-        } catch (IOException ex) {
+            // Init the start scene to run
+            Method method;
+
+            method = startMenu.getClass().getMethod("setIsStart", boolean.class);
+            method.invoke(startMenu, true);
+        } catch (IOException | NoSuchMethodException | SecurityException | IllegalAccessException
+                | IllegalArgumentException
+                | InvocationTargetException ex) {
             Logger.getLogger(ex.getMessage());
         }
 
@@ -69,11 +75,26 @@ public class SceneManager {
 
     public void loadScene(int index) {
         frame.remove(currentScene);
+        /*
+         * @Solution for problem noted in Base scene
+         */
+        Method method;
+        try {
+            method = currentScene.getClass().getMethod("setIsStart", boolean.class);
+            method.invoke(currentScene, false);
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e) {
+            Logger.getLogger(e.getMessage());
+        }
+        currentScene = null;
         Component comp;
         try {
             comp = (Component) classes[index].getDeclaredConstructor().newInstance();
             frame.add(comp);
             comp.requestFocus();
+
+            method = comp.getClass().getMethod("setIsStart", boolean.class);
+            method.invoke(comp, true);
 
             // Need to be pack after add to frame to display and apply the preferred size
             frame.pack();

@@ -4,11 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -16,7 +13,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.Timer;
 import main.java.App;
 import main.java.model.Pipe;
@@ -24,36 +20,11 @@ import main.java.model.Player;
 import main.java.model.Position2D;
 import main.java.service.PipeManager;
 
-public class FlappyBird extends JPanel implements ActionListener, KeyListener {
-    // JFrame size
-    static final int FRAME_WIDTH = App.FRAME_WIDTH;
-    static final int FRAME_HEIGHT = App.FRAME_HEIGHT;
-
-    private int sceneIndex = 1;
+public class FlappyBird extends BaseScene {
 
     // Physics 2D
-    int velocityX = 3;
-    int velocityY = 0;
-    static final int GRAVITY = 1;
     int playerDeathX;
     Random rand = new Random();
-
-    // Component's asset
-    transient Image playerImg;
-    transient Image backgroundImage;
-    transient Image higherPipe;
-    transient Image lowerpipe;
-
-    // Player component
-    transient Player player;
-
-    // Pipe Component
-    transient PipeManager pipeManager;
-
-    // Game timer
-    Timer gameLoop;
-    boolean isLose = false;
-    boolean isFirst = true;
 
     // Score
     double score = 0;
@@ -61,22 +32,23 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     private JButton menuBtn = new JButton("Menu");
 
     public FlappyBird() throws IOException {
+        // SceneIndex
+        sceneIndex = 1;
+
         setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
         // setFocusable: make sure falppybird class is mainly take on the key events
         setFocusable(true);
 
         playerImg = new ImageIcon(getClass().getResource("../../resources/img/flappybird.png")).getImage();
-        backgroundImage = new ImageIcon(getClass().getResource("../../resources/img/flappybirdbg.png")).getImage();
+        backgroundImg = new ImageIcon(getClass().getResource("../../resources/img/flappybirdbg.png")).getImage();
         higherPipe = new ImageIcon(getClass().getResource("../../resources/img/toppipe.png")).getImage();
         lowerpipe = new ImageIcon(getClass().getResource("../../resources/img/bottompipe.png")).getImage();
 
-        player = new Player(playerImg);
-
-        pipeManager = new PipeManager(higherPipe, lowerpipe);
-
         gameLoop = new Timer(1000 / 90, this);
-        gameLoop.start();
+
+        player = new Player(playerImg);
+        pipeManager = new PipeManager(higherPipe, lowerpipe);
 
         setUpLosePanel();
 
@@ -120,7 +92,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     private void drawComponents(Graphics g) {
         // Draw the background
-        g.drawImage(backgroundImage, 0, 0, 360, 640, null);
+        g.drawImage(backgroundImg, 0, 0, 360, 640, null);
 
         // Draw the player
         g.drawImage(player.getAsset(), player.getPosition2D().getX(), player.getPosition2D().getY(),
@@ -158,7 +130,9 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     }
 
     // Move method
+    @Override
     public void move() {
+        System.out.println(isStart);
         // Apply physics to velocity (the movement of player)
         velocityY += GRAVITY;
 
@@ -276,13 +250,4 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     public void setMenuBtn(JButton menuBtn) {
         this.menuBtn = menuBtn;
     }
-
-    public int getSceneIndex() {
-        return sceneIndex;
-    }
-
-    public void setSceneIndex(int sceneIndex) {
-        this.sceneIndex = sceneIndex;
-    }
-
 }

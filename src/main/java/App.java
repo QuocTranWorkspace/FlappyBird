@@ -11,11 +11,8 @@ public class App extends JFrame {
     public static SceneManager sceneManager;
 
     public void prepareGUI() {
-        int frameWidth = 360;
-        int frameHeight = 640;
-
         JFrame frame = new JFrame();
-        frame.setSize(frameWidth, frameHeight);
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

@@ -2,7 +2,8 @@ package main.java.controller;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,20 +12,13 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.Timer;
 import main.java.App;
+import main.java.model.Player;
+import main.java.model.Position2D;
 
-public class StartMenu extends JPanel {
-
-    // JFrame size
-    static final int FRAME_WIDTH = App.FRAME_WIDTH;
-    static final int FRAME_HEIGHT = App.FRAME_HEIGHT;
-
-    private int sceneIndex = 0;
+public class StartMenu extends BaseScene {
     private int redirectIndex = 1;
-
-    // Component's asset
-    transient Image backgroundImage;
 
     JButton playBtn = new JButton("Start");
     JButton globalScoreBtn = new JButton("Score Board");
@@ -35,11 +29,18 @@ public class StartMenu extends JPanel {
             Arrays.asList(playBtn, globalScoreBtn, personalScoreBtn, exitBtn));
 
     public StartMenu() throws IOException {
+        sceneIndex = 0;
+
         setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
         // setFocusable: make sure falppybird class is mainly take on the key events
         setFocusable(true);
-        backgroundImage = new ImageIcon(getClass().getResource("../../resources/img/flappybirdbg.png")).getImage();
+        playerImg = new ImageIcon(getClass().getResource("../../resources/img/flappybird.png")).getImage();
+        backgroundImg = new ImageIcon(getClass().getResource("../../resources/img/flappybirdbg.png")).getImage();
+
+        player = new Player(playerImg);
+
+        gameLoop = new Timer(1000 / 90, this);
 
         setUpStartPanel();
     }
@@ -85,15 +86,46 @@ public class StartMenu extends JPanel {
 
     private void drawComponents(Graphics g) {
         // Draw the background
-        g.drawImage(backgroundImage, 0, 0, 360, 640, null);
+        g.drawImage(backgroundImg, 0, 0, 360, 640, null);
+        // Draw the player
+        g.drawImage(player.getAsset(), player.getPosition2D().getX(), player.getPosition2D().getY(),
+                player.getPlayerWidth(), player.getPlayerHeight(),
+                null);
     }
 
-    public int getSceneIndex() {
-        return sceneIndex;
+    // Move method
+    @Override
+    public void move() {
+        // Apply physics to velocity (the movement of player)
+        if (velocityY == 11) {
+            velocityY = -12;
+        }
+        velocityY += GRAVITY;
+
+        // Move player
+        // Get player current position
+        Position2D playerPosition = player.getPosition2D();
+        int x = playerPosition.getX();
+        int y = playerPosition.getY();
+
+        // Set the position with physics applied velocity
+        y += velocityY;
+        y = Math.max(y, 0);
+        Position2D newPos = new Position2D(x, y);
+        player.setPosition2D(newPos);
+
+        if (!isStart) {
+            gameLoop.stop();
+            gameLoop.removeActionListener(this);
+            gameLoop = null;
+        }
     }
 
-    public void setSceneIndex(int sceneIndex) {
-        this.sceneIndex = sceneIndex;
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        revalidate();
+        move();
+        repaint();
     }
 
     public int getRedirectIndex() {
@@ -102,6 +134,21 @@ public class StartMenu extends JPanel {
 
     public void setRedirectIndex(int redirectIndex) {
         this.redirectIndex = redirectIndex;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        throw new UnsupportedOperationException("Unimplemented method 'keyPressed'");
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
     }
 
 }

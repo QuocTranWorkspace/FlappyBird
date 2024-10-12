@@ -1,20 +1,31 @@
 package main.java.controller;
 
-import javax.swing.JPanel;
-import main.java.App;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-public class GlobalScoreBoard extends JPanel {
-    // JFrame size
-    static final int FRAME_WIDTH = App.FRAME_WIDTH;
-    static final int FRAME_HEIGHT = App.FRAME_HEIGHT;
+public class GlobalScoreBoard extends BaseScene {
 
-    private int sceneIndex = 2;
-
-    public int getSceneIndex() {
-        return sceneIndex;
+    public GlobalScoreBoard() {
+        sceneIndex = 2;
     }
 
-    public void setSceneIndex(int sceneIndex) {
-        this.sceneIndex = sceneIndex;
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        throw new UnsupportedOperationException("Unimplemented method 'keyPressed'");
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
     }
 }
