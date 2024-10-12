@@ -20,6 +20,8 @@ public class SceneManager {
 
     Component currentScene;
 
+    private static final String START_TIMER = "setIsStart";
+
     public SceneManager(JFrame frame) {
         this.frame = frame;
 
@@ -53,24 +55,21 @@ public class SceneManager {
             // init stage
             StartMenu startMenu = new StartMenu();
             currentScene = startMenu;
+            // Init the start scene to run
+            Method method;
+
+            method = startMenu.getClass().getMethod(START_TIMER, boolean.class);
+            method.invoke(startMenu, true);
             // Request focus for curent sccene: required class ... setFocusable()
             // Must request focus before add
             frame.add(startMenu);
             startMenu.requestFocus();
-            frame.pack();
 
-            // Init the start scene to run
-            Method method;
-
-            method = startMenu.getClass().getMethod("setIsStart", boolean.class);
-            method.invoke(startMenu, true);
         } catch (IOException | NoSuchMethodException | SecurityException | IllegalAccessException
                 | IllegalArgumentException
                 | InvocationTargetException ex) {
             Logger.getLogger(ex.getMessage());
         }
-
-        frame.setVisible(true);
     }
 
     public void loadScene(int index) {
@@ -80,7 +79,7 @@ public class SceneManager {
          */
         Method method;
         try {
-            method = currentScene.getClass().getMethod("setIsStart", boolean.class);
+            method = currentScene.getClass().getMethod(START_TIMER, boolean.class);
             method.invoke(currentScene, false);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
@@ -93,11 +92,8 @@ public class SceneManager {
             frame.add(comp);
             comp.requestFocus();
 
-            method = comp.getClass().getMethod("setIsStart", boolean.class);
+            method = comp.getClass().getMethod(START_TIMER, boolean.class);
             method.invoke(comp, true);
-
-            // Need to be pack after add to frame to display and apply the preferred size
-            frame.pack();
 
             // Set current scence
             currentScene = comp;

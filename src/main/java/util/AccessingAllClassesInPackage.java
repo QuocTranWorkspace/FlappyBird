@@ -42,19 +42,15 @@ public class AccessingAllClassesInPackage {
         File[] files = directory.listFiles();
         if (files != null) {
             for (File file : files) {
-                System.out.println(file.getName());
-
                 if (file.isDirectory()) {
                     assert !file.getName().contains(".");
                     if (file.getName().compareToIgnoreCase(filterClass) != 0) {
                         classes.addAll(findClasses(file, packageName + "." + file.getName(), filterClass));
                     }
-                } else if (file.getName().endsWith(".class")) {
-                    if (file.getName().substring(0, file.getName().length() - 6)
-                            .compareToIgnoreCase(filterClass) != 0) {
-                        classes.add(Class
-                                .forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
-                    }
+                } else if (file.getName().endsWith(".class") && file.getName().substring(0, file.getName().length() - 6)
+                        .compareToIgnoreCase(filterClass) != 0) {
+                    classes.add(Class
+                            .forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
                 }
             }
         }

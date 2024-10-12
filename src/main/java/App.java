@@ -8,21 +8,22 @@ public class App extends JFrame {
     public static final int FRAME_WIDTH = 360;
     public static final int FRAME_HEIGHT = 640;
 
-    public static SceneManager sceneManager;
+    private static final JFrame frame = new JFrame();
+
+    public static final SceneManager sceneManager = new SceneManager(frame);
 
     public void prepareGUI() {
-        JFrame frame = new JFrame();
         frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        sceneManager = new SceneManager(frame);
+        // Need to be pack after add to frame to display and apply the preferred size
+        frame.pack();
+        frame.setVisible(true);
     }
 
     public static void main(String[] args) {
         App app = new App();
         app.prepareGUI();
     }
-
 }

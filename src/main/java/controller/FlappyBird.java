@@ -132,7 +132,6 @@ public class FlappyBird extends BaseScene {
     // Move method
     @Override
     public void move() {
-        System.out.println(isStart);
         // Apply physics to velocity (the movement of player)
         velocityY += GRAVITY;
 
