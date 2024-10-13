@@ -2,7 +2,6 @@ package main.java.controller;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -45,7 +44,7 @@ public class FlappyBird extends BaseScene {
         higherPipe = new ImageIcon(getClass().getResource("../../resources/img/toppipe.png")).getImage();
         lowerpipe = new ImageIcon(getClass().getResource("../../resources/img/bottompipe.png")).getImage();
 
-        gameLoop = new Timer(1000 / 90, this);
+        gameLoop = new Timer(1000 / 60, this);
 
         player = new Player(playerImg);
         pipeManager = new PipeManager(higherPipe, lowerpipe);
@@ -63,16 +62,18 @@ public class FlappyBird extends BaseScene {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Set the buttons to be Center both directions
-        restartBtn.setPreferredSize(new Dimension(80, 30));
-        restartBtn.setMaximumSize(new Dimension(80, 30));
+        restartBtn.setPreferredSize(new Dimension(120, 30));
+        restartBtn.setMaximumSize(new Dimension(120, 30));
         restartBtn.setAlignmentX(CENTER_ALIGNMENT);
+        restartBtn.setFont(pixelFont);
         restartBtn.setVisible(false);
 
         restartBtn.addActionListener(actionEvent -> App.sceneManager.loadScene(1));
 
-        menuBtn.setPreferredSize(new Dimension(80, 30));
-        menuBtn.setMaximumSize(new Dimension(80, 30));
+        menuBtn.setPreferredSize(new Dimension(120, 30));
+        menuBtn.setMaximumSize(new Dimension(120, 30));
         menuBtn.setAlignmentX(CENTER_ALIGNMENT);
+        menuBtn.setFont(pixelFont);
         menuBtn.setVisible(false);
 
         menuBtn.addActionListener(actionEvent -> App.sceneManager.loadScene(0));
@@ -109,7 +110,7 @@ public class FlappyBird extends BaseScene {
 
         // Draw the score
         g.setColor(Color.BLACK);
-        g.setFont(new Font("Rockwell", Font.PLAIN, 16));
+        g.setFont(pixelFont);
         if (isLose) {
             g.drawString("", 10, 35);
         } else {

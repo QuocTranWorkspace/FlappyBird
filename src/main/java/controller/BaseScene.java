@@ -1,5 +1,6 @@
 package main.java.controller;
 
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
@@ -8,6 +9,7 @@ import javax.swing.Timer;
 import main.java.App;
 import main.java.model.Player;
 import main.java.service.PipeManager;
+import main.java.service.SceneManager;
 
 public abstract class BaseScene extends JPanel implements ActionListener, KeyListener {
     int sceneIndex;
@@ -15,6 +17,9 @@ public abstract class BaseScene extends JPanel implements ActionListener, KeyLis
     // JFrame size
     static final int FRAME_WIDTH = App.FRAME_WIDTH;
     static final int FRAME_HEIGHT = App.FRAME_HEIGHT;
+
+    // Fonts
+    Font pixelFont = SceneManager.getPixelFont();
 
     // Physics 2D
     int velocityX = 3;

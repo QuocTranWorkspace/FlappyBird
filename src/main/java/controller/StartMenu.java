@@ -52,6 +52,7 @@ public class StartMenu extends BaseScene {
         this.add(Box.createVerticalGlue());
 
         for (JButton btn : btnContainer) {
+            btn.setFont(pixelFont);
             btn.setPreferredSize(new Dimension(150, 30));
             btn.setMaximumSize(new Dimension(150, 30));
             btn.setAlignmentX(CENTER_ALIGNMENT);

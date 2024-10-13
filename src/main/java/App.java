@@ -5,6 +5,7 @@ import javax.swing.WindowConstants;
 import main.java.service.SceneManager;
 
 public class App extends JFrame {
+    // App size
     public static final int FRAME_WIDTH = 360;
     public static final int FRAME_HEIGHT = 640;
 
@@ -22,6 +23,7 @@ public class App extends JFrame {
         frame.setVisible(true);
     }
 
+    @SuppressWarnings("static-access")
     public static void main(String[] args) {
         App app = new App();
         app.prepareGUI();
