@@ -4,6 +4,7 @@ import java.awt.Image;
 import main.java.App;
 
 public class Player {
+
     private static final int WIDTH = 41;
     private static final int HEIGHT = 29;
 
@@ -53,4 +54,5 @@ public class Player {
     public void setPlayerHeight(int playerHeight) {
         this.playerHeight = playerHeight;
     }
+
 }

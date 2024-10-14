@@ -18,6 +18,7 @@ import main.java.model.Player;
 import main.java.model.Position2D;
 
 public class StartMenu extends BaseScene {
+
     private int redirectIndex = 1;
 
     JButton playBtn = new JButton("Start");

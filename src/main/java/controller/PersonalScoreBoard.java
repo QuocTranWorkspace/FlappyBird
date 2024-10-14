@@ -28,4 +28,5 @@ public class PersonalScoreBoard extends BaseScene {
     public void keyReleased(KeyEvent e) {
         throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
     }
+
 }

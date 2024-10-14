@@ -3,6 +3,7 @@ package main.java.model;
 import java.awt.Image;
 
 public class Pipe {
+
     private static final int WIDTH = 64;
     private static final int HEIGHT = 512;
 

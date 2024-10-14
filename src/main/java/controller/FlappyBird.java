@@ -44,7 +44,7 @@ public class FlappyBird extends BaseScene {
         higherPipe = new ImageIcon(getClass().getResource("../../resources/img/toppipe.png")).getImage();
         lowerpipe = new ImageIcon(getClass().getResource("../../resources/img/bottompipe.png")).getImage();
 
-        gameLoop = new Timer(1000 / 60, this);
+        gameLoop = new Timer(1000 / 90, this);
 
         player = new Player(playerImg);
         pipeManager = new PipeManager(higherPipe, lowerpipe);
@@ -250,4 +250,5 @@ public class FlappyBird extends BaseScene {
     public void setMenuBtn(JButton menuBtn) {
         this.menuBtn = menuBtn;
     }
+
 }

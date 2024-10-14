@@ -12,6 +12,8 @@ import main.java.service.PipeManager;
 import main.java.service.SceneManager;
 
 public abstract class BaseScene extends JPanel implements ActionListener, KeyListener {
+
+    // Scene index fo loading scene
     int sceneIndex;
 
     // JFrame size
@@ -72,4 +74,5 @@ public abstract class BaseScene extends JPanel implements ActionListener, KeyLis
             gameLoop.start();
         }
     }
+
 }

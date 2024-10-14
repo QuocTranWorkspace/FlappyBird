@@ -15,6 +15,7 @@ import main.java.controller.StartMenu;
 import main.java.util.AccessingAllClassesInPackage;
 
 public class SceneManager {
+
     // Common font
     static Font pixelFont;
 
@@ -185,4 +186,5 @@ public class SceneManager {
     public void closeApp() {
         this.frame.dispose();
     }
+
 }
